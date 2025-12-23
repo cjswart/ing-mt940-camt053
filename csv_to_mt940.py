@@ -1,9 +1,8 @@
 import csv
 from datetime import datetime
 from collections import defaultdict
-
-INPUT_FILE = "NL91INGB0004386274_01-01-2025_21-12-2025.csv"
-OUTPUT_FILE = "NL91INGB0004386274_01-01-2025_21-12-2025.mt940"
+import sys
+import os
 
 # Helper to format date for MT940
 
@@ -63,10 +62,8 @@ def convert_csv_to_mt940(input_path, output_path):
     with open(output_path, 'w', encoding='utf-8') as outfile:
         sorted_dates = sorted(blocks.keys())
         # Ask user for starting balance, default to previous value
-        default_saldo = determine_default_saldo(transactions)
-        user_input = input(f"Enter starting balance (default: {default_saldo}): ").strip()
-
-        saldo_open = user_input if user_input else default_saldo
+        saldo_open = determine_default_saldo(transactions)
+        print(f"Begin Saldo: {saldo_open}")
         previous_saldo = saldo_open
         for i, block_date in enumerate(sorted_dates):
             block = blocks[block_date]
@@ -101,6 +98,16 @@ def convert_csv_to_mt940(input_path, output_path):
             outfile.write(f":86:/SUM/{af_count}/{bij_count}/{af_sum:.2f}/{bij_sum:.2f}/\n")
             outfile.write("-}\n")
             previous_saldo = saldo_end
-
+        print(f"Eind  Saldo: {saldo_end}")
 if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print("Usage: python csv_to_mt940.py <inputfile.csv>")
+        sys.exit(1)
+
+    INPUT_FILE = sys.argv[1]
+    if not INPUT_FILE.lower().endswith('.csv'):
+        print("Input file must have a .csv extension.")
+        sys.exit(1)
+
+    OUTPUT_FILE = os.path.splitext(INPUT_FILE)[0] + '.mt940'
     convert_csv_to_mt940(INPUT_FILE, OUTPUT_FILE)
