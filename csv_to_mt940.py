@@ -71,7 +71,7 @@ def convert_csv_to_mt940(input_path, output_path):
             outfile.write("{2:I940INGBNL2AXXXN}\n")
             outfile.write("{4:\n")
             outfile.write(":20:P251208000000001\n")
-            outfile.write(":25:NL91INGB0004386274EUR\n")
+            outfile.write(f":25:{block[0]['Rekening']}EUR\n")
             outfile.write(":28C:00000\n")
             # Use previous day's closing balance as opening balance
             outfile.write(f":60F:C{format_date(block_date)}EUR{previous_saldo}\n")
