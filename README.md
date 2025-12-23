@@ -1,5 +1,5 @@
 # ing-mt940-camt053
-ING csv van een niet zakelijke rekening converteren naar mt940 of camt.053 bestand welke geimporteerd kan worden in moneybird<br>
+ING csv van een niet zakelijke rekening converteren naar mt940 of camt.053 bestand welke geimporteerd kan worden in moneybird
 
 Als je een zakelijke rekening hebt kan je gelijk vanuit je zakelijke mijn ing omgeving exporteren als mt940 of camt.053 bestand.<br>
 Vanaf een niet zakelijke rekening kan je alleen een csv bestand exporteren<br>
