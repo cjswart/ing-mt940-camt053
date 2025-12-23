@@ -1,12 +1,10 @@
 import csv
 from datetime import datetime, timedelta
 from collections import defaultdict
-
-INPUT_FILE = "NL91INGB0004386274_01-01-2025_21-12-2025.csv"
-OUTPUT_FILE = "NL91INGB0004386274_01-01-2025_21-12-2025.camt053.xml"
+import sys
+import os
 
 HEADER = """<?xml version='1.0' encoding='UTF-8'?>
-
 <Document xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns=\"urn:iso:std:iso:20022:tech:xsd:camt.053.001.02\" xsi:schemaLocation=\"urn:iso:std:iso:20022:tech:xsd:camt.053.001.02 camt.053.001.02.xsd\">
 	<BkToCstmrStmt>
 		<GrpHdr>
@@ -101,7 +99,7 @@ def convert_csv_to_camt053_full(input_path, output_path):
     for date in blocks:
         saldo = blocks[date][0]["Saldo na mutatie"].replace(",", ".")
         day_end_balances[date] = saldo
-        print(f"End saldo for {date}: {saldo}")
+        # print(f"End saldo for {date}: {saldo}")
     sorted_dates = sorted(blocks.keys())
     default_saldo = determine_default_saldo(transactions)
     print(f"Begin Saldo: {default_saldo}")
@@ -280,4 +278,12 @@ def convert_csv_to_camt053_full(input_path, output_path):
         outfile.write(FOOTER)
 
 if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print("Usage: python csv_to_camt053.py <inputfile.csv>")
+        sys.exit(1)
+    INPUT_FILE = sys.argv[1]
+    if not INPUT_FILE.lower().endswith('.csv'):
+        print("Input file must have a .csv extension.")
+        sys.exit(1)
+    OUTPUT_FILE = os.path.splitext(INPUT_FILE)[0] + '.camt053.xml'
     convert_csv_to_camt053_full(INPUT_FILE, OUTPUT_FILE)
